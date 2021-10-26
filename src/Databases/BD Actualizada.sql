@@ -36,7 +36,7 @@ CREATE TABLE COMENTARTIOS (
 ====================================================
 CREATE TABLE departamentos (
 id INT (45) NOT NULL,
-Nombre VARCHAR (75) NOT NOT,
+Nombre VARCHAR (75) NOT NULL,
 )
 =====================================================
 CREATE TABLE municipio (
