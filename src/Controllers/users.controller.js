@@ -27,24 +27,29 @@ const getAllUsers = (req, res) => {
     mysqlconnection.query.bind(mysqlconnection)
   );
   let numRows;
-  let queryPagination;
   const numPerPage = Number(req.query.npp) || 1;
   const page = Number(req.query.page) || 1;
+  const Nombre = req.query.name || "";
+  const Apellido = req.query.last || "";
   let numPages;
   let skip = (page - 1) * numPerPage;
   // Here we compute the LIMIT parameter for MySQL query
   var limit = skip + "," + numPerPage;
-  queryAsync("SELECT count(*) as numRows FROM usuarios")
+  queryAsync(
+    `SELECT count(*) as numRows FROM usuarios WHERE Nombre LIKE "%${Nombre}%" AND Apellido LIKE "%${Apellido}%"`
+  )
     .then(function (results) {
       numRows = results[0].numRows;
       numPages = Math.ceil(numRows / numPerPage);
     })
     .then(() =>
-      queryAsync("SELECT * FROM usuarios ORDER BY ID DESC LIMIT " + limit)
+      queryAsync(
+        `SELECT * FROM usuarios WHERE Nombre LIKE "%${Nombre}%" AND Apellido LIKE "%${Apellido}%" ORDER BY ID DESC LIMIT ${limit}`
+      )
     )
     .then(function (results) {
       var responsePayload = {
-        users: results,
+        users: results, 
       };
       if (page <= numPages) {
         responsePayload.pagination = {
