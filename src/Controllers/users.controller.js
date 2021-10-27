@@ -49,7 +49,7 @@ const getAllUsers = (req, res) => {
     )
     .then(function (results) {
       var responsePayload = {
-        users: results, 
+        users: results,
       };
       if (page <= numPages) {
         responsePayload.pagination = {
@@ -94,17 +94,21 @@ const updateUser = (req, res) => {
 
   const sql =
     "update usuarios set Nombre = ?,Apellido = ?,Email = ?,Clave = ? where id = ?";
-  mysqlconnection.query(
-    sql,
-    [Nombre, Apellido, Email, Clave, id],
-    (err, rows, fields) => {
-      if (!err) {
-        res.json({ Status: "Employees Updated" });
-      } else {
-        console.log(err);
+  try {
+    mysqlconnection.query(
+      sql,
+      [Nombre, Apellido, Email, Clave, id],
+      (err, rows, fields) => {
+        if (!err) {
+          return res.json({ msg: "Se actualizo el usuario", ok: true });
+        } else {
+          return res.json({ msg: "Ocurrio un error", ok: false });
+        }
       }
-    }
-  );
+    );
+  } catch (error) {
+    return res.json({ msg: "Ocurrio un error", ok: false });
+  }
 };
 
 const getUser = (req, res) => {
